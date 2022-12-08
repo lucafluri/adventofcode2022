@@ -13,20 +13,20 @@ def isVisible(x, y):
     # Check left
     for i in range(x-1, -1, -1):
         if forest[i][y] < h:
-            count += 1
+            return True
     # Check right
     for i in range(x+1, len(forest[0])):
         if forest[i][y] < h:
-            count += 1
+            return True
     # Check up
     for i in range(y-1, -1, -1):
         if forest[x][i] < h:
-            count += 1
+            return True
     # Check down
     for i in range(y+1, len(forest)):
         if forest[x][i] < h:
-            count += 1
-    return count > 0
+            return True
+    return False
     
 
 sum = 0
