@@ -12,6 +12,8 @@ lines = fileIn.readlines()
 # Build adjancy matrix of legal moves
 # BFS from S to E
 
+# Part II: iterate over all height a nodes and find shortest path to E
+
 start = None
 end = None
 class Node:
@@ -31,6 +33,9 @@ class Node:
     
     def __str__(self):
         return self.name 
+
+    def __lt__(self, other):
+        return self.height < other.height
 
 
 # read input as matrix
@@ -76,18 +81,33 @@ for x in range(len(inputMatrix)):
         # print(inputMatrix[x][y-1])
         addtoAdj(x, y)
 
+nodes2 = nodes
+nodes2.sort()
 # for n in nodes:
-    # print(n, n.adj)
+    # print(n, n.height)
+dist = []
+idx = 0
+while nodes2[idx].height == ord('a'):
+    
+    # print(nodes2[idx])
+    queue = [nodes2[idx]]
+    # visited = set()
 
-queue = [start]
-# visited = set()
+    while(len(queue) != 0):
+        node = queue.pop(0)
+        for n in node.adj:
+            if(not n.visited):
+                n.dist = node.dist + 1
+                n.visited = True
+                queue.append(n)
+    dist.append(end.dist)
+    
+    idx += 1
+    for n in nodes:
+        n.dist = 0
+        n.visited = False
 
-while(len(queue) != 0):
-    node = queue.pop(0)
-    for n in node.adj:
-        if(not n.visited):
-            n.dist = node.dist + 1
-            n.visited = True
-            queue.append(n)
+dist = list(filter(lambda x: x != 0, dist))
+print(min(dist))
 
-print(end.dist)
+
