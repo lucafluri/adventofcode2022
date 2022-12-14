@@ -30,24 +30,30 @@ for line in lines:
 
 rockList = list(rock)
 rockList.sort(key=lambda x: x[1])
-lowestPoint = rockList[-1][1]
+lowestPoint = rockList[-1][1] + 2
 print("Lowest Point", lowestPoint)
 
 def isFree(P):
     x, y = P
-    return not (x, y) in rock and not(x, y) in sand
+    return not (x, y) in rock and not(x, y) in sand and y < lowestPoint
 
 def fallsIntoAbyss(P):
     x, y = P
     return y > lowestPoint
 
+def plugged(P):
+    x, y = P
+    return  P == (500, 0)
+
 
 
 S = (500, 0)
-while(not fallsIntoAbyss(S)):
+while(True):
     SS = (S[0], S[1]+1)
     SW = (S[0]-1, S[1]+1)
     SE = (S[0]+1, S[1]+1)
+    
+    
     
     if(isFree(SS)):
         S = SS
@@ -57,6 +63,9 @@ while(not fallsIntoAbyss(S)):
         S = SE
     else:
         sand.add(S)
+        
+        if(S == (500, 0)):
+            break
         S = (500, 0)
 
 print(len(sand))
