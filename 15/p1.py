@@ -22,21 +22,6 @@ lineRight = -sys.maxsize -1
 def distance(sens, beacon):
     return abs(sens[0] - beacon[0]) + abs(sens[1] - beacon[1])
 
-def numBlockedOnLineFromSens(line, sens, d):
-    x, y = sens
-    diff = abs(line - y)
-    if(diff > int(d)): return
-    num = (d*2+1) - (diff*2)
-    # print(num)
-    for i in range(num):
-        P = ((x-(d-diff))+i, line)
-        # print(P)
-        if(P in beacons or P in sensors): 
-            # print("beacon or sensor", P)
-            continue
-        nobeacons.add(P)
-    return 
-
 def numBlockedOnLineFromSens2(line, sens, d):
     global lineLeft, lineRight, lineBeaconsOrSensors
     x, y = sens
