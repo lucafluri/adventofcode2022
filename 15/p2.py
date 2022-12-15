@@ -41,15 +41,7 @@ def numBlockedOnLineFromSens2(line, sens, d):
     R = min(R, MAXXY)
     
     segments.append((L, R))
-    
-    # if(L > lineRight or R < lineLeft): 
-    #     print("GAP FOUND AT LINE", line) 
-    #     print("L", L, "R", R, "lineLeft", lineLeft, "lineRight", lineRight)
-    #     # return
-    # if(L < lineLeft): lineLeft = L
-    # if(R > lineRight): lineRight = R
-    
-    
+        
     
 def beaconOrSensorOnLine(line):
     global lineBeaconsOrSensors
@@ -90,9 +82,8 @@ for line in lines:
     
 
     
-# line = 2000000
-# count = 0
-for X in range(MAXXY): # approx 40 seconds
+# Runtime approx 75 seconds for 4000000 lines
+for X in range(MAXXY): 
     lineLeft = sys.maxsize
     lineRight = -sys.maxsize -1
     segments = []
@@ -105,23 +96,3 @@ for X in range(MAXXY): # approx 40 seconds
         XCoord = segments[0][1] + 1
         print("GAP FOUND AT LINE", XCoord, X)
         printTuningFrequency(XCoord, X)
-    # allLines.append((lineLeft, lineRight))
-    
-# beaconOrSensorOnLine(line)
-# print(segments)
-# combineSegments()
-# print(segments)
-    
-# num = lineRight - lineLeft + 1
-
-# print(num - lineBeaconsOrSensors)
-
-
-
-# numBlockedOnLineFromSens(8, (8, 7), 9)
-
-# listNoBeacons = list(nobeacons)
-# listNoBeacons.sort(key=lambda x: x[0])
-
-# print(listNoBeacons)
-# print(len(nobeacons))
