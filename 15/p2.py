@@ -1,13 +1,13 @@
 import re
 import sys
 
-file = open('15/in2.txt', 'r')
+file = open('15/in.txt', 'r')
 lines = file.readlines()
 
 # Only save row of impossible points, not whole matrix!
 # ..####B######################..
 
-MAXXY = 20
+MAXXY = 4000000
 
 sensors = [] # (x, y) sens, 
 beacons = set() # (x, y) beacon
@@ -37,8 +37,8 @@ def numBlockedOnLineFromSens2(line, sens, d):
     # print(num)
     L = (x-(d-diff))
     R = (x+(d-diff))
-    # L = max(L, 0)
-    # R = min(R, MAXXY)
+    L = max(L, 0)
+    R = min(R, MAXXY)
     
     segments.append((L, R))
     
@@ -100,7 +100,8 @@ for X in range(MAXXY): # approx 40 seconds
         # print(sensors[i], beacons[i], d)
         numBlockedOnLineFromSens2(X, sensors[i], d)
     combineSegments()
-    if(len(segments) > 1): 
+    # print(segments)
+    if(len(segments) > 1 and segments[0][1] != segments[1][0]-1): 
         XCoord = segments[0][1] + 1
         print("GAP FOUND AT LINE", XCoord, X)
         printTuningFrequency(XCoord, X)
