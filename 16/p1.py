@@ -18,16 +18,26 @@ class Node:
     def __init__(self, name, flowrate):
         self.name = name
         self.flowrate = flowrate
+        self.distToAA = 0
+        self.visited = False
+        self.open = False
         self.children = []
     
     def __eq__(self, other):
         return self.name == other.name
     
+    def __hash__(self):
+        count = 0
+        for c in self.name:
+            count += ord(c)*(self.flowrate+1)
+        return count
+            
+    
     # def __gt__(self, other):
     #     return self.flowrate > other.flowrate
 
     def __str__(self):
-        return f"{self.name}, {self.flowrate}, {len(self.children)} children"
+        return f"{self.name}, {self.flowrate}, {len(self.children)} children, {self.distToAA} dist to AA, {self.visited} visited"
         
 valves = []
     
@@ -58,16 +68,49 @@ for line in lines:
 
 start = valves[valves.index(Node('AA', 0))]
 
-opened = set()
-currentNode = start
-pressure = 0
-minutes = 0
+queue = set()
+
+def bfs(start):
+    start.visited = True
+    queue.add(start)
+    while(len(queue) > 0):
+        current = queue.pop()
+        for c in current.children:
+            if(not c.visited):
+                c.distToAA = current.distToAA + 1
+                c.visited = True
+                queue.add(c)
+
+# stack = set();
+# length = 0
+# longestPath = []
+
+def dfs(start, time):
+    paths = []
+    pressures = []
+    start.visited = True
+    # stack = [(time, )] #!! TODO
+    # for c in start.children:
+    #     if(not c.visited and c.distToAA > 0):
+    #         # longestPath.append(c)
+    #         # if(len 
+    #         print(c.name, end=" ")
+    #         dfs(c)
+    #         # longestPath.remove(c)
+    # stack.remove(start)
+# 
 
 
 
-# def backtrack(node, minutes, pressure):
+bfs(start)
+for v in valves:
+    v.visited = False
 
-print(pressure)
+dfs(start)
 
 
+for n in valves:
+    print(n)
+    
+print(longestPath)
     
