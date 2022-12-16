@@ -11,7 +11,8 @@ lines = file.readlines()
 
 # Idea
 # Build graph with inverse weights from flow rate 
-# So that disjkstra finds the best path
+# BFS to build graph with distances from start
+# DFS to find longest path on new graph
 
 class Node:
     def __init__(self, name, flowrate):
