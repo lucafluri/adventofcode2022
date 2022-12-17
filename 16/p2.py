@@ -89,15 +89,23 @@ paths, pressures = zip(*allPaths)
 a, b = 0, 1 # indexes of paths for me and elephant
 max = 0
 
-for i in range(len(paths)):
-    for j in range(i+1, len(paths)):
+for pA in paths[:1000]:
+    for pB in paths[:1000]:
+        # print(pA, pB)
+        if(pA != pB):
+            for x in pA:
+                if(x in pB):
+                    break
+            pressure = pressures[paths.index(pA)] + pressures[paths.index(pB)]
+            if(pressure > max):
+                print(pressure, pA, pB)
+                max = pressure
         
-        if(any(x in paths[i] for x in paths[j])):
-            continue
-        print(paths[i], paths[j])
-        if(pressures[i] + pressures[j] > max):
-            max = pressures[i] + pressures[j]
+        
+        # if(pA != pB and not any(x in pA for x in pB)):
+        #     print("Found")
             
+
 print(max)
 
 # while(any(x in paths[a] for x in paths[b])):
