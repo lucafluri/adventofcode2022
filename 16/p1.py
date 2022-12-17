@@ -1,7 +1,7 @@
 # Imports 
 import re
 
-file = open('16/in2.txt', 'r')
+file = open('16/in.txt', 'r')
 lines = file.readlines()
 
 # Goal
@@ -9,108 +9,81 @@ lines = file.readlines()
 # 1 min travel time, 1 min to release pressure
 # What is max pressure releasable in 30 minutes?
 
-# Idea
-# Build graph with inverse weights from flow rate 
-# BFS to build graph with distances from start
-# DFS to find longest path on new graph
+nodes = set()
+flowrates = {}
+distances = {}
+children = {}
 
-class Node:
-    def __init__(self, name, flowrate):
-        self.name = name
-        self.flowrate = flowrate
-        self.distToAA = 0
-        self.visited = False
-        self.open = False
-        self.children = []
-    
-    def __eq__(self, other):
-        return self.name == other.name
-    
-    def __hash__(self):
-        count = 0
-        for c in self.name:
-            count += ord(c)*(self.flowrate+1)
-        return count
-            
-    
-    # def __gt__(self, other):
-    #     return self.flowrate > other.flowrate
-
-    def __str__(self):
-        return f"{self.name}, {self.flowrate}, {len(self.children)} children, {self.distToAA} dist to AA, {self.visited} visited"
-        
-valves = []
-    
 regs = r"Valve (\w{2}) has flow rate=(\d+); tunnels? leads? to valves? ((\w\w,?[^\S\r\n]?)+)"
 
 # Build Nodes
 for line in lines:
     line = re.findall(regs, line)
     # print(line)
-    n = Node(line[0][0], int(line[0][1]))
+    name = line[0][0]
+    fr = int(line[0][1])
     # print(n)
-    if n not in valves:
-        valves.append(n)
-    else:
-        n = valves[valves.index(n)]
-        n.flowrate = int(line[0][1])
-    
-    for c in line[0][2].split(', '):
-        # print(c)
-        c = Node(c, 0)
-        if(c not in valves):
-            valves.append(c)
-        else:
-            # print("Found")
-            c = valves[valves.index(c)]
-        n.children.append(c)
+    nodes.add(name)
+    children[name] = []
+    flowrates[name] = fr
+    for c in line[0][2].split(','):
+        children[name].append(c.strip())
         
+print("Starting BFS")
+# Calc all distances between nodes with flowrates > 0
+for start in nodes:
+    visited = set()
+    queue = [start]
+    distances[start] = {start: 0}
+    while queue:
+        node = queue.pop(0)
+        if node not in visited:
+            visited.add(node)
+            for child in children[node]:
+                if child not in distances[start]:
+                    distances[start][child] = distances[start][node] + 1
+                queue.append(child)
 
-start = valves[valves.index(Node('AA', 0))]
+# Find all possible paths in 30 minutes
+# DFS for all paths
+paths = []
+pressures = []
 
-queue = set()
+print("Starting DFS")
+# time, press, path
+stack = [(30, 0, ['AA'])]
+while len(stack) > 0:
+    # print(stack)
+    t, p, path = stack.pop()
+    current = path[-1]
+    possibleStates = []
+    for n, d in distances[current].items():
+        # No time left or already visited
+        if(n in path or d+2>t or flowrates[n] == 0): # time to open and letting pressure out
+            continue
+        newTime = t - d - 1
+        newPressure = p + flowrates[n] * newTime
+        newState = (newTime, newPressure, path + [n])
+        possibleStates.append(newState)
 
-def bfs(start):
-    start.visited = True
-    queue.add(start)
-    while(len(queue) > 0):
-        current = queue.pop()
-        for c in current.children:
-            if(not c.visited):
-                c.distToAA = current.distToAA + 1
-                c.visited = True
-                queue.add(c)
-
-# stack = set();
-# length = 0
-# longestPath = []
-
-def dfs(start, time):
-    paths = []
-    pressures = []
-    start.visited = True
-    # stack = [(time, )] #!! TODO
-    # for c in start.children:
-    #     if(not c.visited and c.distToAA > 0):
-    #         # longestPath.append(c)
-    #         # if(len 
-    #         print(c.name, end=" ")
-    #         dfs(c)
-    #         # longestPath.remove(c)
-    # stack.remove(start)
-# 
+    if(len(possibleStates) > 0):
+        stack.extend(possibleStates)
+    else: #exhausted search direction
+        pressures.append(p)
+        paths.append(path[1:])
+            
 
 
 
-bfs(start)
-for v in valves:
-    v.visited = False
-
-dfs(start)
-
-
-for n in valves:
-    print(n)
-    
-print(longestPath)
-    
+        
+# print(nodes)
+# print(children)
+# print(flowrates)
+# for n, d in distances.items():
+#     print(n, d)
+# print(paths)
+# idx = pressures.index(max(pressures))
+# print(pressures[idx])
+# print(paths[idx])
+print(max(pressures))
+# print(distances['AA']['CC'])
