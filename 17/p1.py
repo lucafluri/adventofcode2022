@@ -38,12 +38,13 @@ jetIndex = 0
 
 
 # Idea shortcut jet pushes until highest rock, then check in more detail
-start = maxH + 3
+y = maxH + 3
 x = 2
 jetSum = sum(jets[jetIndex:jetIndex+3])
 
-print(print(jetSum))
-    
+length = 4
 
+posX = min(7-length, max(0, x + jetSum))
 
+print(posX)
 
