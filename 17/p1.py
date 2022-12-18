@@ -58,7 +58,7 @@ def drop(id, hRocks):
 
     # bottom left corner
     # Go to +1 of highest rock
-    posX = min(7-length, max(-2, x + jetSum))
+    posX = min(7-length, max(0, x + jetSum))
     # if(jetSum < -2): jetsum = -2
     # if(jetSum > (7-length)-2): jetSum = 7-length-2
 
@@ -70,24 +70,26 @@ def drop(id, hRocks):
     while True:
         # print(x, y)
         for i in range(posX, posX+length):
-            if(maxH != 0 and hRocks[i] == rocks[id]["p"][i][1]+1 or y == 0):
-                print("Rock in the way", i, hRocks[i], rocks[id]["p"][i][1] -1, y)
-                
+            if(maxH != 0 and hRocks[i] == rocks[id]["p"][i][1]-1 or y == 0):
+                print("Rock in the way", i)
+                print(hRocks[i], rocks[id]["p"][i][1] -1, y)
                 break
             else:
-               pass
+                pass
         else:
             y -= 1
+            print(posX)
             posX += jets[jetIndex]
             print(posX)
             jetIndex = (jetIndex + 1) % len(jets)
-            posX = min(7-length, max(-2, posX))
+            posX = max(0, min(7-length, posX))
             continue
         break
-
+    
     # Add new top rocks # !! TODO per rock different
     for x in range(posX, posX+length):
         hRocks[x] = max(hRocks[x], y + rocks[id]["h"][x-posX])
+    maxH = max(hRocks)
     print(hRocks)
 
 
